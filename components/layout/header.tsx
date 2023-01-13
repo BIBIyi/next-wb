@@ -1,14 +1,20 @@
 import React from "react";
-import Head from "next/head";
+import { Fragment } from "react";
 import Link from "next/link";
+import { Button } from "antd";
 
 export default function header() {
   return (
-    <>
-      <Head>
-        <title>First Post</title>
-      </Head>
-      <div>header</div>
-    </>
+    <Fragment>
+      <header style={{ backgroundColor: "gray", height: "30px" }}>
+        <Link href="/" style={{ marginRight: "10px" }}>
+          homePage
+        </Link>
+        <Link href="/signup" style={{ marginRight: "10px" }}>
+          Sign up
+        </Link>
+        <Link href="/login">Login</Link>
+      </header>
+    </Fragment>
   );
 }

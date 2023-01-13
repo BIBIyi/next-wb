@@ -3,11 +3,12 @@ import Link from "next/link";
 import { Button, Checkbox, Form, Input, Radio } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import classes from "./login.module.css";
-
+import Header from "@/components/layout/header";
 export default function login() {
   const [form] = Form.useForm();
   return (
     <>
+      <Header></Header>
       <div className={classes.login}>
         <h1>Course Management Assistant</h1>
 

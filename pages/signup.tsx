@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Button, Form, Input, Radio, Space } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import FormItem from "antd/es/form/FormItem";
-
+import Header from "../components/layout/header";
 export default function signup() {
   const [form] = Form.useForm();
 
   return (
     <>
+      <Header />
       <div className={classes.login}>
         <h1>Sign up your account</h1>
 
