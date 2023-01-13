@@ -1,31 +1,40 @@
 import React from "react";
-import Link from "next/link";
-import { Button, Checkbox, Form, Input, Radio } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import classes from "./login.module.css";
 
-export default function login() {
+import classes from "./login.module.css";
+import Link from "next/link";
+import { Button, Form, Input, Radio, Space } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import FormItem from "antd/es/form/FormItem";
+
+export default function signup() {
   const [form] = Form.useForm();
+
   return (
     <>
       <div className={classes.login}>
-        <h1>Course Management Assistant</h1>
+        <h1>Sign up your account</h1>
 
         <Form
           form={form}
           layout="vertical"
           className={classes.form}
-          name="login"
+          name="signUp"
         >
-          <Form.Item name="role" required>
+          <Form.Item
+            name="role"
+            label="Role"
+            required
+            rules={[{ required: true }]}
+          >
             <Radio.Group style={{ marginTop: 10 }} size="middle">
-              <Radio.Button value="student">Student</Radio.Button>
-              <Radio.Button value="teacher">Teacher</Radio.Button>
-              <Radio.Button value="manager">Manager</Radio.Button>
+              <Radio value="student">Student</Radio>
+              <Radio value="teacher">Teacher</Radio>
+              <Radio value="manager">Manager</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
             name="email"
+            label="Email"
             rules={[{ required: true }, { type: "email" }]}
           >
             <Input
@@ -36,25 +45,28 @@ export default function login() {
           </Form.Item>
           <Form.Item
             name="password"
+            label="Password"
             rules={[{ required: true }, { min: 4, max: 16 }]}
           >
-            <Input
-              prefix={<LockOutlined />}
-              placeholder="input password"
-              type="password"
-            />
+            <Input.Password placeholder="input password" type="password" />
           </Form.Item>
-          <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>remember me?</Checkbox>
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["password"]}
+            rules={[{ required: true }, { min: 4, max: 16 }]}
+          >
+            <Input.Password placeholder="Tap password again" />
           </Form.Item>
+
           <Form.Item>
             <Button type="primary" className={classes.button} htmlType="submit">
-              login
+              Sign up
             </Button>
           </Form.Item>
           <Form.Item>
-            <span style={{ marginRight: "5px" }}>No account?</span>
-            <Link href="/signup">Sign up</Link>
+            <span style={{ marginRight: "5px" }}>Already have an account?</span>
+            <Link href="/login">Login</Link>
           </Form.Item>
         </Form>
       </div>
