@@ -1,11 +1,40 @@
 import React from "react";
+import { useEffect } from "react";
+
 import Link from "next/link";
 import { Button, Checkbox, Form, Input, Radio } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import classes from "./login.module.css";
 import Header from "@/components/layout/header";
-export default function login() {
+import axios from "axios";
+import { useRouter } from "next/router";
+
+export default function Login() {
   const [form] = Form.useForm();
+  const router = useRouter();
+
+  const onfinish = async (values: any) => {
+    const data = axios
+      .get("/api/login")
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error))
+      .then(function () {
+        // 总是会执行
+      })
+      .then(function () {
+        // 总是会执行
+      });
+    console.log("data:", data);
+    if (!!data) {
+      localStorage.router.push("dashboard");
+    }
+  };
+  useEffect(() => {
+    if (localStorage?.role) {
+      router.push(`/dashboard/${localStorage.role}`);
+    }
+  }, []);
+
   return (
     <>
       <Header></Header>
@@ -17,9 +46,10 @@ export default function login() {
           layout="vertical"
           className={classes.form}
           name="login"
+          onFinish={onfinish}
         >
           <Form.Item name="role" required>
-            <Radio.Group style={{ marginTop: 10 }} size="middle">
+            <Radio.Group>
               <Radio.Button value="student">Student</Radio.Button>
               <Radio.Button value="teacher">Teacher</Radio.Button>
               <Radio.Button value="manager">Manager</Radio.Button>

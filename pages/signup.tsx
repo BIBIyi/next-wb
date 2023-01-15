@@ -2,12 +2,44 @@ import React from "react";
 
 import classes from "./login.module.css";
 import Link from "next/link";
-import { Button, Form, Input, Radio, Space } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import FormItem from "antd/es/form/FormItem";
+import { Button, Form, Input, Radio } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import Header from "../components/layout/header";
-export default function signup() {
+import { useRouter } from "next/router";
+import ApiService from "@/lib/api-service";
+
+import axios from "axios";
+
+export default function Page(props: any) {
   const [form] = Form.useForm();
+  const router = useRouter();
+
+  const onFinish = async (values: any) => {
+    const { password, ...rest } = values;
+    const newData = { ...rest, password: ApiService(password) };
+    localStorage.getItem(newData);
+    const data = await axios
+      .post("/api/login", newData)
+      .then((res) => res.data)
+      .catch((error) => console.log(error));
+
+    if (!!data) {
+      console.log("local", localStorage);
+      router.push("login");
+    }
+
+    //store localStorage
+  };
+  // localStorage.setItem("email", values.email);
+  // localStorage.setItem("role", values.role);
+  // const password = ApiService();
+  // localStorage.setItem("password", password);
+  // console.log("values", localStorage);
+  // router.push("login");
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
     <>
@@ -20,6 +52,8 @@ export default function signup() {
           layout="vertical"
           className={classes.form}
           name="signUp"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             name="role"
@@ -27,7 +61,7 @@ export default function signup() {
             required
             rules={[{ required: true }]}
           >
-            <Radio.Group style={{ marginTop: 10 }} size="middle">
+            <Radio.Group>
               <Radio value="student">Student</Radio>
               <Radio value="teacher">Teacher</Radio>
               <Radio value="manager">Manager</Radio>
@@ -55,7 +89,20 @@ export default function signup() {
             name="confirmPassword"
             label="Confirm Password"
             dependencies={["password"]}
-            rules={[{ required: true }, { min: 4, max: 16 }]}
+            // rules={[{ required: true }, { min: 4, max: 16 }]}
+            rules={[
+              { required: true },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "The two passwords that you entered do not match!"
+                  );
+                },
+              }),
+            ]}
           >
             <Input.Password placeholder="Tap password again" />
           </Form.Item>
