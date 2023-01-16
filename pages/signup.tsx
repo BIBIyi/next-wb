@@ -13,18 +13,34 @@ import axios from "axios";
 export default function Page(props: any) {
   const [form] = Form.useForm();
   const router = useRouter();
+  //set time
+  const TimeStorageSet = (data: any) => {
+    const obj = {
+      data,
+      expire: new Date().getTime() + 1000 * 60 * 30,
+    };
+    return obj;
+  };
 
   const onFinish = async (values: any) => {
     const { password, ...rest } = values;
-    const newData = { ...rest, password: ApiService(password) };
-    localStorage.getItem(newData);
+    const newData = {
+      ...rest,
+      password: ApiService(password),
+      time: new Date().getTime() + 1000 * 60 * 30,
+    };
+
+    console.log("newDate", newData);
+
+    // localStorage.setItem("user", newData);
     const data = await axios
       .post("/api/login", newData)
       .then((res) => res.data)
       .catch((error) => console.log(error));
 
+    console.log("sign-updata", data);
+
     if (!!data) {
-      console.log("local", localStorage);
       router.push("login");
     }
 

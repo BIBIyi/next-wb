@@ -24,14 +24,16 @@ export default function Login() {
       .then(function () {
         // 总是会执行
       });
-    console.log("data:", data);
-    if (!!data) {
-      localStorage.router.push("dashboard");
-    }
+    console.log("login-data", data);
+
+    // if (!!data) {
+    //   router.push("dashboard");
+    // }
   };
   useEffect(() => {
-    if (localStorage?.role) {
-      router.push(`/dashboard/${localStorage.role}`);
+    if (localStorage.data?.role) {
+      console.log("-----", localStorage.data.role);
+      // router.push(`/dashboard/${localStorage.role}`);
     }
   }, []);
 
