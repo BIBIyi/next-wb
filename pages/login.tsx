@@ -7,6 +7,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import classes from "./login.module.css";
 import Header from "@/components/layout/header";
 import axios from "axios";
+import { AES } from "crypto-js";
 import { useRouter } from "next/router";
 
 export default function Login() {
@@ -14,20 +15,29 @@ export default function Login() {
   const router = useRouter();
 
   const onfinish = async (values: any) => {
-    const data = axios
-      .get("/api/login")
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error))
-      .then(function () {
-        // 总是会执行
+    const { password, ...rest } = values;
+    const newData = {
+      ...rest,
+      password: AES.encrypt(password, "cms").toString(),
+    };
+    // console.log("new", newData);
+    const returnData = axios
+      .post("api/login", {
+        newData,
       })
-      .then(function () {
-        // 总是会执行
-      });
-    console.log("login-data", data);
-
-    // if (!!data) {
-    //   router.push("dashboard");
+      //执行代码后代码处理
+      .then((res) => {
+        const { token } = res.data;
+        console.log("token", token);
+        // //store token to local
+        // localStorage.setItem("loginToken", token);
+      })
+      .catch((error) => console.log("catch:", error));
+    console.log("data:", returnData);
+    // if (!!newData) {
+    //   // localStorage.setItem(data);
+    //   // router.push("dashboard");
+    //   console.log("---------");
     // }
   };
   useEffect(() => {
@@ -93,4 +103,7 @@ export default function Login() {
       </div>
     </>
   );
+}
+function setAuthToken(token: any) {
+  throw new Error("Function not implemented.");
 }

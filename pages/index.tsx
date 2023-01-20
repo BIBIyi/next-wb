@@ -2,7 +2,9 @@ import Head from "next/head";
 import React from "react";
 import Header from "../components/layout/header";
 import styled from "styled-components";
+
 export default function Home() {
+  // axios.defaults.baseURL = "http://cms.chtoma.com/api";
   return (
     <>
       <Head>

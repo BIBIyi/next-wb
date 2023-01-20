@@ -21,7 +21,7 @@ const encrypt = (data: any) => {
   });
   return encrypted.toString();
 };
-const ApiService = (props: any) => {
-  return encrypt(props);
+const ApiService = (data: any) => {
+  return encrypt(data);
 };
 export default ApiService;
