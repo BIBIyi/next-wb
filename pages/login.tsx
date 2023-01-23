@@ -30,7 +30,6 @@ export default function Login() {
     if (!!data) {
       localStorage.setItem("Token", data.data.token);
       localStorage.setItem("role", data.data.role);
-
       // console.log("local", localStorage);
       router.push("dashboard");
     }

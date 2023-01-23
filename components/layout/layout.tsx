@@ -5,30 +5,62 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, theme, Input } from "antd";
 import type { MenuProps } from "antd";
+import styled from "styled-components";
 const { Header, Content, Sider } = Layout;
 
+const Search = styled(Input.Search)`
+  width: 30%;
+  display: block;
+`;
+
+const Logo = styled.div`
+  height: 64px;
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #fff;
+  letter-space: 5px;
+  text-shadow: 5px 1px 5px;
+  transform: rotateX(45deg);
+  font-family: monospace;
+`;
+const StyledLayoutHeader = styled(Header)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout
+      style={{
+        height: "100vh",
+      }}
+    >
       <Sider
         className="leftSider"
-        width={200}
-        style={{ background: colorBgContainer }}
-        trigger={null}
         collapsible
         collapsed={collapsed}
+        onCollapse={() => {}}
       >
-        {/* {
-          <div className="logo" style={{ color: "#fff", cursor: "pointer" }}>
-            cms
-          </div>
-        } */}
+        {
+          <Logo>
+            <div className="logo" style={{ color: "#fff", cursor: "pointer" }}>
+              cms
+            </div>
+          </Logo>
+        }
         <Menu
           theme="dark"
           mode="inline"
