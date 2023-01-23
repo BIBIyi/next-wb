@@ -16,34 +16,31 @@ export default function Login() {
 
   const onfinish = async (values: any) => {
     const { password, ...rest } = values;
-    const newData = {
+    const dataPar = {
       ...rest,
       password: AES.encrypt(password, "cms").toString(),
     };
-    // console.log("new", newData);
-    const returnData = axios
-      .post("api/login", {
-        newData,
-      })
-      //执行代码后代码处理
-      .then((res) => {
-        const { token } = res.data;
-        console.log("token", token);
-        // //store token to local
-        // localStorage.setItem("loginToken", token);
-      })
-      .catch((error) => console.log("catch:", error));
-    console.log("data:", returnData);
-    // if (!!newData) {
-    //   // localStorage.setItem(data);
-    //   // router.push("dashboard");
-    //   console.log("---------");
-    // }
+    const { data } = await axios({
+      method: "POST",
+      url: "api/login",
+      data: dataPar,
+    });
+
+    // console.log("data", data);
+    if (!!data) {
+      localStorage.setItem("Token", data.data.token);
+      localStorage.setItem("role", data.data.role);
+
+      // console.log("local", localStorage);
+      router.push("dashboard");
+    }
+    // console.log("role", localStorage);
   };
+
   useEffect(() => {
-    if (localStorage.data?.role) {
-      console.log("-----", localStorage.data.role);
-      // router.push(`/dashboard/${localStorage.role}`);
+    if (localStorage?.role) {
+      // console.log("-----", localStorage.data.role);
+      router.push(`/dashboard/${localStorage.role}`);
     }
   }, []);
 
