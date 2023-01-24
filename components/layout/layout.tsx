@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import {
   BellOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge, Breadcrumb, Layout, Menu, theme, Input } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, theme, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
 const { Header, Content, Sider } = Layout;
@@ -36,7 +36,23 @@ const StyledLayoutHeader = styled(Header)`
   top: 0;
   z-index: 10;
 `;
-export default function AppLayout() {
+
+const HeaderIcon = styled.span`
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    color: #1890ff;
+  }
+`;
+const StyledContent = styled(Content)`
+  margin: 16px;
+  background-color: #fff;
+  padding: 16px;
+  min-height: auto;
+`;
+export default function AppLayout(props: React.PropsWithChildren<any>) {
+  const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -86,21 +102,26 @@ export default function AppLayout() {
           ]}
         />
       </Sider>
-      <Layout className="contextLayout">
-        <Header
-          className="header"
-          style={{ padding: 0, background: colorBgContainer }}
-        >
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: () => setCollapsed(!collapsed),
-            }
-          )}
-        </Header>
+
+      <Layout id="contextLayout">
+        <StyledLayoutHeader>
+          <HeaderIcon>
+            {React.createElement(
+              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+              {
+                // className: "trigger",
+                onClick: () => setCollapsed(!collapsed),
+              }
+            )}
+          </HeaderIcon>
+          <Row>
+            <div style={{ color: "#fff" }}>message</div>
+            <div style={{ color: "#fff" }}>user</div>
+          </Row>
+        </StyledLayoutHeader>
+
         <div>AppBreadcrumb</div>
-        <div>StyledContent</div>
+        <StyledContent>{Children}</StyledContent>
       </Layout>
     </Layout>
   );
