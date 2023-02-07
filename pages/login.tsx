@@ -6,40 +6,38 @@ import { Button, Checkbox, Form, Input, Radio } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import classes from "./login.module.css";
 import Header from "@/components/layout/header";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import { AES } from "crypto-js";
 import { useRouter } from "next/router";
 
+const LoginData = "Token";
 export default function Login() {
   const [form] = Form.useForm();
   const router = useRouter();
 
   const onfinish = async (values: any) => {
     const { password, ...rest } = values;
-    const dataPar = {
-      ...rest,
-      password: AES.encrypt(password, "cms").toString(),
-    };
     const { data } = await axios({
       method: "POST",
       url: "api/login",
-      data: dataPar,
+      data: {
+        ...rest,
+        password: AES.encrypt(password, "cms").toString(),
+      },
     });
 
-    // console.log("data", data);
     if (!!data) {
-      localStorage.setItem("Token", data.data.token);
-      localStorage.setItem("role", data.data.role);
-      // console.log("local", localStorage);
+      localStorage.setItem(LoginData, JSON.stringify(data.data));
+      // console.log("local", localStorage.getItem(LoginData));
       router.push("dashboard");
     }
-    // console.log("role", localStorage);
   };
 
   useEffect(() => {
-    if (localStorage?.role) {
-      // console.log("-----", localStorage.data.role);
-      router.push(`/dashboard/${localStorage.role}`);
+    if (localStorage.getItem(LoginData)) {
+      const data = JSON.parse(localStorage.getItem(LoginData));
+      console.log("-----", data["role"]);
+      router.push(`/dashboard/${data["role"]}`);
     }
   }, []);
 

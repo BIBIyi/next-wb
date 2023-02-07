@@ -1,11 +1,11 @@
-import React, { Children, useState } from "react";
+import React, { useState } from "react";
 import {
   BellOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge, Breadcrumb, Layout, Menu, theme, Input, Row } from "antd";
+import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
 const { Header, Content, Sider } = Layout;
@@ -51,12 +51,39 @@ const StyledContent = styled(Content)`
   padding: 16px;
   min-height: auto;
 `;
+
+type MenuItem = Required<MenuProps>["items"][number];
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: "group"
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem;
+}
+
+const items: MenuProps["items"] = [
+  getItem("Overview", "sub1", null),
+  getItem("Student", "sub2", null, [getItem("Student List", "s1", null)]),
+  getItem("Teacher", "sub3", null, [getItem("Teacher List", "t1", null)]),
+  getItem("Course", "sub4", null, [
+    getItem("All Courses", "c1", null),
+    getItem("Add Course", "c2", null),
+    getItem("Edit Course", "c3", null),
+  ]),
+  getItem("Message", "sub5", null),
+];
+
 export default function AppLayout(props: React.PropsWithChildren<any>) {
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   return (
     <Layout
@@ -65,6 +92,11 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
       }}
     >
       <Sider
+        style={{
+          overflow: "auto",
+          height: "100vh",
+          position: "fixed",
+        }}
         className="leftSider"
         collapsible
         collapsed={collapsed}
@@ -80,30 +112,14 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["3"]}
-          defaultOpenKeys={["1"]}
-          style={{ height: "100%", borderRight: 0 }}
-          items={[
-            {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "nav 1",
-            },
-            {
-              key: "2",
-              icon: <UserOutlined />,
-              label: "nav 2",
-            },
-            {
-              key: "3",
-              icon: <UserOutlined />,
-              label: "nav 3",
-            },
-          ]}
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          // style={{ height: "100%", borderRight: 0 }}
+          items={items}
         />
       </Sider>
 
-      <Layout id="contextLayout">
+      <Layout id="contextLayout" style={{ marginLeft: 200 }}>
         <StyledLayoutHeader>
           <HeaderIcon>
             {React.createElement(
@@ -114,14 +130,14 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
               }
             )}
           </HeaderIcon>
-          <Row>
-            <div style={{ color: "#fff" }}>message</div>
-            <div style={{ color: "#fff" }}>user</div>
+          <Row style={{ color: "#fff" }}>
+            <div>message</div>
+            <div>user</div>
           </Row>
         </StyledLayoutHeader>
 
-        <div>AppBreadcrumb</div>
-        <StyledContent>{Children}</StyledContent>
+        <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div>
+        <StyledContent>{children}</StyledContent>
       </Layout>
     </Layout>
   );

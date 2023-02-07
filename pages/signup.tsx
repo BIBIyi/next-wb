@@ -6,7 +6,7 @@ import { Button, Form, Input, Radio } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Header from "../components/layout/header";
 import { useRouter } from "next/router";
-import ApiService from "@/lib/api-service";
+import { AES } from "crypto-js";
 
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export default function Page(props: any) {
     const { password, ...rest } = values;
     const newData = {
       ...rest,
-      password: ApiService(password),
+      password: AES.encrypt(password, "cms").toString(),
       time: new Date().getTime() + 1000 * 60 * 30,
     };
 
@@ -38,20 +38,10 @@ export default function Page(props: any) {
       .then((res) => res.data)
       .catch((error) => console.log(error));
 
-    console.log("sign-updata", data);
-
     if (!!data) {
       router.push("login");
     }
-
-    //store localStorage
   };
-  // localStorage.setItem("email", values.email);
-  // localStorage.setItem("role", values.role);
-  // const password = ApiService();
-  // localStorage.setItem("password", password);
-  // console.log("values", localStorage);
-  // router.push("login");
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
