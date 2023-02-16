@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env BASE_URL=http://localhost:3000 next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "test": "cross-env BASE_URL= http://cms.chtoma.com/api next start",
+    "start": "next start"
   },
   "dependencies": {
     "@next/font": "13.1.2",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "cross-env": "^7.0.3"
   }
 }

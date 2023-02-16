@@ -40,6 +40,7 @@ const StyledLayoutHeader = styled(Header)`
 const HeaderIcon = styled.span`
   font-size: 18px;
   color: #fff;
+
   cursor: pointer;
   &:hover {
     color: #1890ff;
@@ -53,6 +54,7 @@ const StyledContent = styled(Content)`
 `;
 
 type MenuItem = Required<MenuProps>["items"][number];
+
 function getItem(
   label: React.ReactNode,
   key: React.Key,
@@ -81,10 +83,15 @@ const items: MenuProps["items"] = [
   getItem("Message", "sub5", null),
 ];
 
+function getMenuItems(data: any) {
+  const loginData = JSON.parse(localStorage.getItem("Token"));
+  const userRole = loginData["role"];
+  console.log("--", userRole);
+}
 export default function AppLayout(props: React.PropsWithChildren<any>) {
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
-
+  getMenuItems(1);
   return (
     <Layout
       style={{
@@ -92,11 +99,6 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
       }}
     >
       <Sider
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-        }}
         className="leftSider"
         collapsible
         collapsed={collapsed}
@@ -119,7 +121,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
         />
       </Sider>
 
-      <Layout id="contextLayout" style={{ marginLeft: 200 }}>
+      <Layout id="contextLayout" style={{ overflow: "scroll" }}>
         <StyledLayoutHeader>
           <HeaderIcon>
             {React.createElement(

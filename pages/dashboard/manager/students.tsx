@@ -5,6 +5,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import studentJson from "../../../mock/student.json";
+
 const Search = styled(Input.Search)`
   width: 30%;
   display: block;
