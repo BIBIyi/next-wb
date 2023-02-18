@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env BASE_URL=http://localhost:3000 next dev",
+    "dev": "next dev",
+    "test": "next dev",
     "build": "next build",
-    "test": "cross-env BASE_URL= http://cms.chtoma.com/api next start",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
     "@next/font": "13.1.2",

@@ -5,8 +5,13 @@ export type UserInfo = LoginResponse;
 
 export class Storage {
   key = "info";
+
   setUserInfo(info: UserInfo): void {
     localStorage.setItem(this.key, JSON.stringify(info));
+  }
+
+  deleteUserInfo(): void {
+    localStorage.removeItem(this.key);
   }
 
   get userInfo(): UserInfo {
@@ -26,7 +31,7 @@ export class Storage {
   }
 
   get userId(): number {
-    return +this.userInfo?.userId;
+    return this.userInfo?.userId;
   }
 }
 export const storage = new Storage();

@@ -1,22 +1,35 @@
 import Head from "next/head";
 import React from "react";
 import Header from "../components/layout/header";
-import styled from "styled-components";
 
-export default function Home() {
-  console.log(process.env.NODE_ENV);
-  console.log("env", process.env.BASE_URL);
+// export default function Home() {
+//   return (
+//     <>
+//       <Head>
+//         <title>Create App</title>
+//         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+//       </Head>
+//       <body>
+//         <div style={{ backgroundColor: "green" }}>
+//           <Header></Header>
+//           <div> homepage-main</div>
+//         </div>
+//       </body>
+//     </>
+//   );
+// }
 
+export default function index() {
   return (
-    <>
+    <div style={{ backgroundColor: "green", padding: 0, margin: 0 }}>
       <Head>
         <title>Create App</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Header></Header>
-      <main>
+      <div style={{ padding: 0 }}>
+        <Header></Header>
         <div> homepage-main</div>
-      </main>
-    </>
+      </div>
+    </div>
   );
 }

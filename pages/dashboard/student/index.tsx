@@ -1,5 +1,5 @@
 import React from "react";
-
+import AppLayout from "@/components/layout/layout";
 export default function index() {
-  return <div>index</div>;
+  return <AppLayout> student index</AppLayout>;
 }

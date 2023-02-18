@@ -1,5 +1,5 @@
 import React from "react";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { AES } from "crypto-js";
 import {
   LoginFormValues,
@@ -9,33 +9,37 @@ import {
 import { IResponse } from "@/components/model";
 import storage from "./storage";
 
+//阻拦器
+// const baseURL = getBaseUrl();
+const baseURL = "http://cms.chtoma.com/api";
 const axiosInstance = axios.create({
-  baseURL: "http://cms.chtoma.com/api",
+  baseURL,
   withCredentials: true,
   responseType: "json",
   timeout: 5000,
 });
-//阻拦器
-axiosInstance.interceptors.request.use(
-  (config) => {
-    console.log(1234);
-    return config;
-  },
-  (error) => {
-    console.log(error);
+
+//拦截
+axiosInstance.interceptors.request.use(function (config) {
+  if (!config.url.includes("login")) {
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: `Bearer ${storage?.token}`,
+      },
+    };
   }
-);
+
+  return config;
+});
 
 class BaseApiService {
   protected async post<T>(path: any, params: object): Promise<T> {
-    console.log("base", params);
-
-    // return axios({ url: "api/login", method: "POST", data: params });
-    // return axios({ url: "/login", method: "POST", data: params });
-    return axios
-      .post("api/login", params)
+    return axiosInstance
+      .post(path, params)
       .then((res) => res.data)
-      .catch((error) => console.log(error));
+      .catch((err) => console.log(err));
   }
 }
 class ApiService extends BaseApiService {
@@ -47,6 +51,9 @@ class ApiService extends BaseApiService {
       ...rest,
       password: AES.encrypt(password, "cms").toString(),
     });
+  }
+  loginOut(): Promise<IResponse<boolean>> {
+    return this.post<IResponse<boolean>>("/logout", {});
   }
 }
 

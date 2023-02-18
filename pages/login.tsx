@@ -10,6 +10,7 @@ import { AES } from "crypto-js";
 import { useRouter } from "next/router";
 import { LoginFormValues } from "@/components/model/login";
 import apiService from "@/lib/services/api-service";
+import storage from "@/lib/services/storage";
 
 const LoginData = "Token";
 export default function Login() {
@@ -28,24 +29,22 @@ export default function Login() {
   //   });
   const onfinish = async (loginRequest: LoginFormValues) => {
     // console.log("login-data", loginRequest);
-    const data = await apiService.login(loginRequest);
+    const { data } = await apiService.login(loginRequest);
     console.log("data", data);
-    console.log(process.env.NODE_ENV);
-    console.log("env", process.env.BASE_URL);
+
+    if (!!data) {
+      storage.setUserInfo(data);
+      router.push("dashboard");
+      // localStorage.setItem(LoginData, JSON.stringify(data.data));
+      // console.log("local", localStorage.getItem(LoginData));
+    }
   };
 
-  // if (!!data) {
-  //   localStorage.setItem(LoginData, JSON.stringify(data.data));
-  //   // console.log("local", localStorage.getItem(LoginData));
-  //   // router.push("dashboard");
-  // }
-
   useEffect(() => {
-    // if (localStorage.getItem(LoginData)) {
-    //   const data = JSON.parse(localStorage.getItem(LoginData));
-    //   console.log("-----", data["role"]);
-    //   router.push(`/dashboard/${data["role"]}`);
-    // }
+    if (storage?.userInfo) {
+      console.log("print", storage.userInfo.role, storage.role);
+      router.push(`/dashboard/${storage.role}`);
+    }
   }, []);
 
   return (
@@ -64,7 +63,11 @@ export default function Login() {
           }}
           onFinish={(values: LoginFormValues) => onfinish(values)}
         >
-          <Form.Item name="role" rules={[{ required: true }]}>
+          <Form.Item
+            name="role"
+            initialValue="student"
+            rules={[{ required: true }]}
+          >
             <Radio.Group>
               <Radio.Button value="student">Student</Radio.Button>
               <Radio.Button value="teacher">Teacher</Radio.Button>

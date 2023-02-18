@@ -8,8 +8,9 @@ import {
 import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
-const { Header, Content, Sider } = Layout;
+import UserIcon from "./userIcon";
 
+const { Header, Content, Sider } = Layout;
 const Search = styled(Input.Search)`
   width: 30%;
   display: block;
@@ -35,6 +36,7 @@ const StyledLayoutHeader = styled(Header)`
   position: sticky;
   top: 0;
   z-index: 10;
+  width: 100%;
 `;
 
 const HeaderIcon = styled.span`
@@ -84,63 +86,71 @@ const items: MenuProps["items"] = [
 ];
 
 function getMenuItems(data: any) {
-  const loginData = JSON.parse(localStorage.getItem("Token"));
-  const userRole = loginData["role"];
-  console.log("--", userRole);
+  // const loginData = JSON.parse(localStorage.getItem("Token"));
+  // const userRole = loginData["role"];
+  // console.log("--", userRole);
 }
 export default function AppLayout(props: React.PropsWithChildren<any>) {
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
-  getMenuItems(1);
+
   return (
-    <Layout
-      style={{
-        height: "100vh",
-      }}
-    >
-      <Sider
-        className="leftSider"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={() => {}}
+    <div>
+      <Layout
+        style={{
+          height: "100vh",
+          // backgroundColor: "pink",
+        }}
       >
         {
-          <Logo>
-            <div className="logo" style={{ color: "#fff", cursor: "pointer" }}>
-              cms
-            </div>
-          </Logo>
+          <Sider
+            className="leftSider"
+            collapsible
+            collapsed={collapsed}
+            onCollapse={() => {}}
+          >
+            {
+              <Logo>
+                <div
+                  className="logo"
+                  style={{ color: "#fff", cursor: "pointer" }}
+                >
+                  cms
+                </div>
+              </Logo>
+            }
+            <Menu
+              theme="dark"
+              mode="inline"
+              defaultSelectedKeys={["1"]}
+              defaultOpenKeys={["sub1"]}
+              // style={{ height: "100%", borderRight: 0 }}
+              items={items}
+            />
+          </Sider>
         }
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-          // style={{ height: "100%", borderRight: 0 }}
-          items={items}
-        />
-      </Sider>
 
-      <Layout id="contextLayout" style={{ overflow: "scroll" }}>
-        <StyledLayoutHeader>
-          <HeaderIcon>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                // className: "trigger",
-                onClick: () => setCollapsed(!collapsed),
-              }
-            )}
-          </HeaderIcon>
-          <Row style={{ color: "#fff" }}>
-            <div>message</div>
-            <div>user</div>
-          </Row>
-        </StyledLayoutHeader>
+        <div style={{ overflow: "scroll" }}>
+          <StyledLayoutHeader>
+            <HeaderIcon>
+              {React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  // className: "trigger",
+                  onClick: () => setCollapsed(!collapsed),
+                }
+              )}
+            </HeaderIcon>
+            <Row style={{ color: "#fff" }}>
+              <div>message</div>
+              <UserIcon />
+            </Row>
+          </StyledLayoutHeader>
 
-        <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div>
-        <StyledContent>{children}</StyledContent>
+          {/* <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div> */}
+          <StyledContent>{children}</StyledContent>
+        </div>
       </Layout>
-    </Layout>
+    </div>
   );
 }
