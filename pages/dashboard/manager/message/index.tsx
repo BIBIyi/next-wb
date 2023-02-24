@@ -1,5 +1,6 @@
-import React from "react";
 import AppLayout from "@/components/layout/layout";
+import React from "react";
+
 export default function index() {
-  return <AppLayout> dashboard index</AppLayout>;
+  return <AppLayout>message index</AppLayout>;
 }

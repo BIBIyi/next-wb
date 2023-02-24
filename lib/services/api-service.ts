@@ -5,6 +5,7 @@ import {
   LoginFormValues,
   LoginRequest,
   LoginResponse,
+  SignUpRequest,
 } from "@/components/model/login";
 import { IResponse } from "@/components/model";
 import storage from "./storage";
@@ -54,6 +55,9 @@ class ApiService extends BaseApiService {
   }
   loginOut(): Promise<IResponse<boolean>> {
     return this.post<IResponse<boolean>>("/logout", {});
+  }
+  signUP(req: SignUpRequest): Promise<IResponse<boolean>> {
+    return this.post<IResponse<boolean>>("/signup", req);
   }
 }
 

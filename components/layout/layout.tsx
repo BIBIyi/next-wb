@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BellOutlined,
   MenuFoldOutlined,
@@ -9,8 +9,12 @@ import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
 import UserIcon from "./userIcon";
+import storage from "../../lib/services/storage";
+import { routers, SideNav } from "./router";
+import Link from "next/link";
 
 const { Header, Content, Sider } = Layout;
+
 const Search = styled(Input.Search)`
   width: 30%;
   display: block;
@@ -54,46 +58,44 @@ const StyledContent = styled(Content)`
   padding: 16px;
   min-height: auto;
 `;
-
 type MenuItem = Required<MenuProps>["items"][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: "group"
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  } as MenuItem;
-}
-
-const items: MenuProps["items"] = [
-  getItem("Overview", "sub1", null),
-  getItem("Student", "sub2", null, [getItem("Student List", "s1", null)]),
-  getItem("Teacher", "sub3", null, [getItem("Teacher List", "t1", null)]),
-  getItem("Course", "sub4", null, [
-    getItem("All Courses", "c1", null),
-    getItem("Add Course", "c2", null),
-    getItem("Edit Course", "c3", null),
-  ]),
-  getItem("Message", "sub5", null),
-];
-
-function getMenuItems(data: any) {
-  // const loginData = JSON.parse(localStorage.getItem("Token"));
-  // const userRole = loginData["role"];
-  // console.log("--", userRole);
+function getMenuItems(sideData: any, path = ""): JSX.Element[] {
+  // console.log("sideData", sideData);
+  return sideData?.map((data: SideNav, index: number) => {
+    const key = `${data.label}_${index}`;
+    if (data.subNav) {
+      return (
+        <Menu.SubMenu key={key} title={data.label} icon={data.icon}>
+          {getMenuItems(data.subNav, data.path)}
+        </Menu.SubMenu>
+      );
+    } else {
+      return (
+        <Menu.Item key={key} title={data.label} icon={data.icon}>
+          {data.label.toLocaleLowerCase() === "overview" ||
+          data.label.toLocaleLowerCase() === "message" ? (
+            <Link href={`/dashboard/${storage.role}/${data.path}`}>
+              {data.label}
+            </Link>
+          ) : (
+            // data.label
+            <Link href={`/dashboard/${storage.role}/${path}/${data.path}`}>
+              {data.label}
+            </Link>
+          )}
+        </Menu.Item>
+      );
+    }
+  });
 }
 export default function AppLayout(props: React.PropsWithChildren<any>) {
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
-
+  const userRole = storage.role;
+  const sideData = routers.get(userRole);
+  const MenuItems = getMenuItems(sideData);
+  console.log("==", MenuItems);
   return (
     <div>
       <Layout
@@ -102,35 +104,32 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
           // backgroundColor: "pink",
         }}
       >
-        {
-          <Sider
-            className="leftSider"
-            collapsible
-            collapsed={collapsed}
-            onCollapse={() => {}}
-          >
-            {
-              <Logo>
-                <div
-                  className="logo"
-                  style={{ color: "#fff", cursor: "pointer" }}
-                >
-                  cms
-                </div>
-              </Logo>
-            }
-            <Menu
-              theme="dark"
-              mode="inline"
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["sub1"]}
-              // style={{ height: "100%", borderRight: 0 }}
-              items={items}
-            />
-          </Sider>
-        }
+        <Sider
+          className="leftSider"
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => {
+            setCollapsed(value);
+          }}
+        >
+          <Logo>
+            <div className="logo" style={{ color: "#fff", cursor: "pointer" }}>
+              cms
+            </div>
+          </Logo>
 
-        <div style={{ overflow: "scroll" }}>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
+            // items={MenuItems}
+          >
+            {MenuItems}
+          </Menu>
+        </Sider>
+
+        <Layout style={{ overflow: "scroll", width: "100%" }}>
           <StyledLayoutHeader>
             <HeaderIcon>
               {React.createElement(
@@ -147,9 +146,9 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             </Row>
           </StyledLayoutHeader>
 
-          {/* <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div> */}
+          <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div>
           <StyledContent>{children}</StyledContent>
-        </div>
+        </Layout>
       </Layout>
     </div>
   );

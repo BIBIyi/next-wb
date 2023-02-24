@@ -1,43 +1,22 @@
 import React from "react";
-
+import { omit } from "lodash";
 import classes from "./login.module.css";
 import Link from "next/link";
 import { Button, Form, Input, Radio } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Header from "../components/layout/header";
 import { useRouter } from "next/router";
-import { AES } from "crypto-js";
-
-import axios from "axios";
-
+import { RegisterFormValues } from "@/components/model/login";
+import apiService from "@/lib/services/api-service";
 export default function Page(props: any) {
   const [form] = Form.useForm();
   const router = useRouter();
-  //set time
-  const TimeStorageSet = (data: any) => {
-    const obj = {
-      data,
-      expire: new Date().getTime() + 1000 * 60 * 30,
-    };
-    return obj;
-  };
 
-  const onFinish = async (values: any) => {
-    const { password, ...rest } = values;
-    const newData = {
-      ...rest,
-      password: AES.encrypt(password, "cms").toString(),
-      time: new Date().getTime() + 1000 * 60 * 30,
-    };
+  const onFinish = async (values: RegisterFormValues) => {
+    const req = omit(values, "confirmPassword");
+    const { data } = await apiService.signUP(req);
 
-    console.log("newDate", newData);
-
-    // localStorage.setItem("user", newData);
-    const data = await axios
-      .post("/api/login", newData)
-      .then((res) => res.data)
-      .catch((error) => console.log(error));
-
+    console.log("newDate", data);
     if (!!data) {
       router.push("login");
     }

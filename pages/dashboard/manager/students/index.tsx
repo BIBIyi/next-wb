@@ -4,7 +4,8 @@ import { Layout, Input, Button, Table, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
-import studentJson from "../../../mock/student.json";
+import studentJson from "../../../../mock/student.json";
+import AppLayout from "@/components/layout/layout";
 
 const Search = styled(Input.Search)`
   width: 30%;
@@ -85,20 +86,28 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
+const searchQuery = {};
 export default function Students() {
   const displayData = studentJson;
+  const [query, setQuery] = useState<string>("");
   // useEffect(() => {
   //   console.log(displayData[0]);
   // }, []);
   return (
-    <Layout style={{ backgroundColor: "white" }}>
-      <FlexContainer>
-        <Button type="primary" icon={<PlusOutlined />}>
-          Add
-        </Button>
-        <Search placeholder="Search by name" />
-      </FlexContainer>
-      <Table columns={columns} dataSource={displayData}></Table>
-    </Layout>
+    <AppLayout>
+      <Layout style={{ backgroundColor: "white" }}>
+        <FlexContainer>
+          <Button type="primary" icon={<PlusOutlined />}>
+            Add
+          </Button>
+          <Search
+            placeholder="Search by name"
+            onSearch={(values) => setQuery(values)}
+            onChange={searchQuery}
+          />
+        </FlexContainer>
+        <Table columns={columns} dataSource={displayData}></Table>
+      </Layout>
+    </AppLayout>
   );
 }
