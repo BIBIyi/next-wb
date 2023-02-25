@@ -5,7 +5,11 @@ export interface CourseType {
 }
 type CourseStatus = 0 | 1 | 2;
 type DurationUnit = 1 | 2 | 3 | 4 | 5;
-
+export interface CourseShort {
+  id: number;
+  name: string;
+  courseId: number;
+}
 export interface Course {
   id: number;
   name: string;
