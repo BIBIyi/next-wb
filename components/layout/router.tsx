@@ -51,12 +51,12 @@ const courses: SideNav = {
   subNav: [
     { path: "", label: "All Courses", icon: <ProjectOutlined /> },
     {
-      path: "courses/add-course",
+      path: "add-course",
       label: "Add Course",
       icon: <FileAddOutlined />,
     },
     {
-      path: "courses/edit-course",
+      path: "edit-course",
       label: "Edit Course",
       icon: <EditOutlined />,
     },

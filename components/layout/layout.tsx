@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  BellOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import React, { useState } from "react";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
@@ -12,7 +7,7 @@ import UserIcon from "./userIcon";
 import storage from "../../lib/services/storage";
 import { routers, SideNav } from "./router";
 import Link from "next/link";
-
+import AppBreadcrumb from "./breadcrumb";
 const { Header, Content, Sider } = Layout;
 
 const Search = styled(Input.Search)`
@@ -146,7 +141,8 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             </Row>
           </StyledLayoutHeader>
 
-          <div style={{ margin: "0 16px", padding: 16 }}>AppBreadcrumb</div>
+          <AppBreadcrumb></AppBreadcrumb>
+
           <StyledContent>{children}</StyledContent>
         </Layout>
       </Layout>

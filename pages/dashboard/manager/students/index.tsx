@@ -87,6 +87,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const searchQuery = {};
+
 export default function Students() {
   const displayData = studentJson;
   const [query, setQuery] = useState<string>("");
@@ -97,7 +98,11 @@ export default function Students() {
     <AppLayout>
       <Layout style={{ backgroundColor: "white" }}>
         <FlexContainer>
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => console.log("add")}
+          >
             Add
           </Button>
           <Search
