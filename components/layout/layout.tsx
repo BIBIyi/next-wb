@@ -4,18 +4,13 @@ import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
 import styled from "styled-components";
 import storage from "../../lib/services/storage";
-import Link from "react-router-dom";
 import { routers, SideNav } from "./router";
 import UserIcon from "./userIcon";
-import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
-  PieChartOutlined,
-} from "@ant-design/icons";
+import Link from "next/link";
 import AppBreadcrumb from "./breadcrumb";
 import { da } from "date-fns/locale";
+import { Route } from "react-router-dom";
+import { useRouter } from "next/router";
 
 const { Header, Content, Sider } = Layout;
 
@@ -57,15 +52,6 @@ const StyledLayoutHeader = styled(Header)`
   width: 100%;
 `;
 
-// const getMenuConfig = (
-//   data: SideNav[]
-// ): { defaultSelectedKeys: string[]; defaultOpenKeys: string[] } => {
-//   const key = "1";
-//   const defaultSelectedKeys = [key.split("/").pop()];
-//   const defaultOpenKeys = key.split("/").slice(0, -1);
-
-//   return { defaultSelectedKeys, defaultOpenKeys };
-// };
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
   label: React.ReactNode,
@@ -76,111 +62,45 @@ function getItem(
   return { key, label, icon, children } as MenuItem;
 }
 
-function getMenuItems(sideData: any, path = "") {
+function getMenuItems(sideData: any, parentPath = "") {
   return sideData?.map((data: SideNav, index: number) => {
-    const key = `${data.label}_${index}`;
-    if (data.subNav) {
+    // const key = `${data.label}_${index}`;
+    let path = `/dashboard/${storage.role}/${data.path}`;
+    if (data.subNav && !!data.subNav.length) {
+      // const path = `${parentPath}/${data.path}`;
       return getItem(
         data.label,
-        key,
+        path,
         data.icon,
         getMenuItems(data.subNav, data.path)
       );
     } else {
-      return getItem(data.label, key, data.icon);
+      {
+        // data.label.toLocaleLowerCase() === "overview" ||
+        // data.label.toLocaleLowerCase() === "message" ?
+        parentPath === ""
+          ? (path = `/dashboard/${storage.role}/${data.path}`)
+          : (path = `/dashboard/${storage.role}/${parentPath}/${data.path}`);
+      }
+
+      return getItem(data.label, path, data.icon);
     }
   });
 }
 
-// console.log("sideData", sideData);
-// return sideData?.map((data: SideNav, index: number) => {
-//   const key = `${data.label}_${index}`;
-//   return getItem(data.label, key, data.icon);
-// if (data.subNav) {
-//   return (
-/* 
-        { 
-          key:key,
-          icon:data.icon,
-          children:getMenuItems(data.subNav, data.path),
-          label:data.label
-          url:path+data.path
-        }
-        */
-// getItem(
-//   data.label,
-//   key,
-//   data.icon,
-//   getMenuItems(data.subNav, data.path)
-// )
-// <Menu.SubMenu key={key} title={data.label} icon={data.icon}>
-// getMenuItems(data.subNav, data.path)
-// </Menu.SubMenu>
-//   );
-// } else {
-//   return getItem(data.label, key, data.icon);
-/*
-        {
-          key,
-          icon:data.icon,
-          children:data.label.toLocaleLowerCase() === "overview" ||
-          data.label.toLocaleLowerCase() === "message" ? (
-            <Link href={`/dashboard/${storage.role}/${data.path}`}>
-              {data.label}
-            </Link>
-          ) : (
-            // data.label
-            <Link href={`/dashboard/${storage.role}/${path}/${data.path}`}>
-              {data.label}
-            </Link>
-          ),
-          label:data.label
-        }
-        */
-// <Menu.Item key={key} title={data.label} icon={data.icon}>
-//   {/* {data.label.toLocaleLowerCase() === "overview" ||
-//   data.label.toLocaleLowerCase() === "message" ? (
-//     <Link href={`/dashboard/${storage.role}/${data.path}`}>
-//       {data.label}
-//     </Link>
-//   ) : (
-//     // data.label
-//     <Link href={`/dashboard/${storage.role}/${path}/${data.path}`}>
-//       {data.label}
-//     </Link>
-//   )} */}
-//   {data.label}
-// </Menu.Item>
-//   }
-// });
-const items: MenuItem[] = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Navigation Two", "sub2", <AppstoreOutlined />, [
-    getItem("Option 5", "5"),
-    getItem("Option 6", "6"),
-    getItem("Submenu", "sub3", null, [
-      getItem("Option 7", "7"),
-      getItem("Option 8", "8"),
-    ]),
-  ]),
-  getItem("Navigation Three", "sub4", <AppstoreOutlined />, [
-    getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
-    getItem("Option 11", "11"),
-    getItem("Option 12", "12"),
-  ]),
-];
 export default function AppLayout(props: React.PropsWithChildren<any>) {
+  const router = useRouter();
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
   const userRole = storage.role;
   const sideData = routers.get(userRole);
   const data = getMenuItems(sideData);
   // const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(sideData);
-  const getData: MenuItem[] = data;
-  console.log("menuItem:", data, typeof data);
-  console.log("items", items, typeof items);
-  console.log("getData", getData, typeof getData);
+  // console.log("menuItem:", data, typeof data);
+
+  const onClick: MenuProps["onClick"] = (e) => {
+    router.push(e.key);
+  };
   return (
     <Layout
       style={{
@@ -204,9 +124,10 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-          items={getData}
+          // defaultSelectedKeys={["1"]}
+          // defaultOpenKeys={["sub1"]}
+          items={data}
+          onClick={onClick}
         ></Menu>
       </Sider>
 
