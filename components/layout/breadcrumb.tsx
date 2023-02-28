@@ -15,7 +15,7 @@ export default function AppBreadcrumb() {
   return (
     <Breadcrumb style={{ margin: "0 16px", padding: 16 }}>
       <Breadcrumb.Item key={root}>
-        <Link href={root}>{`CMS ${role.toString} SYSTEM`}</Link>
+        <Link href={root}>{`CMS ${role} SYSTEM`}</Link>
       </Breadcrumb.Item>
       {path.length === 0 ? (
         <Breadcrumb.Item>Overview</Breadcrumb.Item>
