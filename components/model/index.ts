@@ -2,6 +2,9 @@ export interface BaseType {
   id: number;
   name: string;
 }
+export interface QueryParams {
+  [key: string]: string | number;
+}
 export interface IResponse<T = any> {
   code: number;
   msg: string;

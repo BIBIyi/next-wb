@@ -147,7 +147,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
           </Row>
         </StyledLayoutHeader>
 
-        {/* <AppBreadcrumb></AppBreadcrumb> */}
+        <AppBreadcrumb></AppBreadcrumb>
 
         <Content
           style={{

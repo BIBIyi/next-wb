@@ -7,8 +7,9 @@ import {
   LoginResponse,
   SignUpRequest,
 } from "@/components/model/login";
-import { IResponse } from "@/components/model";
+import { IResponse, QueryParams } from "@/components/model";
 import storage from "./storage";
+import { StudentsRequest, StudentsResponse } from "@/components/model/students";
 
 //阻拦器
 // const baseURL = getBaseUrl();
@@ -42,6 +43,14 @@ class BaseApiService {
       .then((res) => res.data)
       .catch((err) => console.log(err));
   }
+  protected async get<T>(path: any, params?: QueryParams): Promise<T> {
+    console.log(path);
+
+    return axiosInstance
+      .get(path)
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+  }
 }
 class ApiService extends BaseApiService {
   login({
@@ -58,6 +67,12 @@ class ApiService extends BaseApiService {
   }
   signUP(req: SignUpRequest): Promise<IResponse<boolean>> {
     return this.post<IResponse<boolean>>("/signup", req);
+  }
+  getStudents(req: StudentsRequest): Promise<IResponse<StudentsResponse>> {
+    return this.get<IResponse<StudentsResponse>>(
+      "/students",
+      req as unknown as QueryParams
+    );
   }
 }
 

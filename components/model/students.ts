@@ -11,6 +11,13 @@ export interface Student<T = CourseShort> {
   courses: T[];
   type: BaseType | null;
 }
+export interface StudentsRequest extends Paginator {
+  query?: string;
+  userId?: number;
+}
+export interface StudentsResponse extends ListResponse {
+  students: Student[];
+}
 export interface AddStudentRequest {
   name: string;
   country: string;
@@ -18,6 +25,7 @@ export interface AddStudentRequest {
   type: number;
 }
 export type AddStudentResponse = Student;
+
 export interface UpdateStudentRequest extends AddStudentRequest {
   id: number;
 }

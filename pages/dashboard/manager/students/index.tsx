@@ -13,6 +13,7 @@ import { CourseShort } from "@/components/model/course";
 import { BaseType } from "@/components/model";
 import { formatDistanceToNow } from "date-fns";
 import { message, Popconfirm } from "antd";
+import apiService from "@/lib/services/api-service";
 const Search = styled(Input.Search)`
   width: 30%;
   display: block;
@@ -92,7 +93,7 @@ const columns: ColumnType<Student>[] = [
         <Popconfirm
           title="Delete the task"
           description="Are you sure to delete this task?"
-          onConfirm={confirm}
+          // onConfirm={confirm}
           okText="Confirm"
           cancelText="Cancel"
         >
@@ -108,9 +109,8 @@ const searchQuery = {};
 export default function Students() {
   const displayData = studentJson;
   const [query, setQuery] = useState<string>("");
-  // useEffect(() => {
-  //   console.log(displayData[0]);
-  // }, []);
+  // const studentsData = apiService.getStudents();
+
   return (
     <div>
       <Layout style={{ backgroundColor: "white" }}>
@@ -125,7 +125,7 @@ export default function Students() {
           <Search
             placeholder="Search by name"
             onSearch={(values) => setQuery(values)}
-            onChange={searchQuery}
+            // onChange={searchQuery}
           />
         </FlexContainer>
         <Table columns={columns} dataSource={displayData}></Table>
