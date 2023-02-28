@@ -3,5 +3,5 @@ import AppLayout from "@/components/layout/layout";
 
 import Students from "./students";
 export default function index() {
-  return <AppLayout>overview</AppLayout>;
+  return <div>overview</div>;
 }

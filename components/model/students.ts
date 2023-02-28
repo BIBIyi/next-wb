@@ -1,6 +1,6 @@
 import { Course, CourseShort } from "./course";
 import { BaseType, ListResponse, Paginator } from "./index";
-
+export const businessAreas = ["China", "New Zealand", "Canada", "Australia"];
 export interface Student<T = CourseShort> {
   id: number;
   name: string;

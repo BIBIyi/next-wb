@@ -1,5 +1,15 @@
 import React from "react";
-import AppLayout from "@/components/layout/layout";
+import styled from "styled-components";
+export const Button = styled.button`
+  background: palevioletred;
+  border-radius: 3px;
+  border: none;
+  color: white;
+`;
 export default function index() {
-  return <AppLayout> student index</AppLayout>;
+  return (
+    <>
+      <Button>purple.</Button>
+    </>
+  );
 }
