@@ -8,7 +8,7 @@ import classes from "./login.module.css";
 import Header from "@/components/layout/header";
 import { AES } from "crypto-js";
 import { useRouter } from "next/router";
-import { LoginFormValues } from "@/components/model/login";
+import { LoginFormValues } from "@/lib/model/login";
 import apiService from "@/lib/services/api-service";
 import storage from "@/lib/services/storage";
 

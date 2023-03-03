@@ -6,10 +6,10 @@ import {
   LoginRequest,
   LoginResponse,
   SignUpRequest,
-} from "@/components/model/login";
-import { IResponse, QueryParams } from "@/components/model";
+} from "@/lib/model/login";
+import { IResponse, QueryParams } from "@/lib/model";
 import storage from "./storage";
-import { StudentsRequest, StudentsResponse } from "@/components/model/students";
+import { StudentsRequest, StudentsResponse } from "@/lib/model/students";
 
 //阻拦器
 // const baseURL = getBaseUrl();
@@ -45,7 +45,11 @@ class BaseApiService {
   }
   protected async get<T>(path: any, params?: QueryParams): Promise<T> {
     console.log(path);
-
+    path = !!params
+      ? `${path}?${Object.entries(params)
+          .map(([key, value]) => `${key}=${value}`)
+          .join("&")}`
+      : path;
     return axiosInstance
       .get(path)
       .then((res) => res.data)
@@ -68,7 +72,8 @@ class ApiService extends BaseApiService {
   signUP(req: SignUpRequest): Promise<IResponse<boolean>> {
     return this.post<IResponse<boolean>>("/signup", req);
   }
-  getStudents(req: StudentsRequest): Promise<IResponse<StudentsResponse>> {
+
+  getStudents(req?: StudentsRequest): Promise<IResponse<StudentsResponse>> {
     return this.get<IResponse<StudentsResponse>>(
       "/students",
       req as unknown as QueryParams

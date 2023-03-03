@@ -6,7 +6,7 @@ import { Button, Form, Input, Radio } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Header from "../components/layout/header";
 import { useRouter } from "next/router";
-import { RegisterFormValues } from "@/components/model/login";
+import { RegisterFormValues } from "@/lib/model/login";
 import apiService from "@/lib/services/api-service";
 export default function Page(props: any) {
   const [form] = Form.useForm();

@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Layout, Input, Button, Table, Space } from "antd";
+import { Layout, Input, Button, Table, Space, Form } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import TextLink from "antd/lib/typography/Link";
-import type { TablePaginationConfig } from "antd/es/table";
 import { ColumnType } from "antd/lib/table";
-import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import studentJson from "../../../../mock/student.json";
 import AppLayout from "@/components/layout/layout";
-import { Student } from "@/components/model/students";
-import { CourseShort } from "@/components/model/course";
-import { BaseType } from "@/components/model";
+import {
+  Student,
+  StudentsRequest,
+  StudentsResponse,
+} from "@/lib/model/students";
+import { CourseShort } from "@/lib/model/course";
 import { formatDistanceToNow } from "date-fns";
 import { message, Popconfirm } from "antd";
 import apiService from "@/lib/services/api-service";
+import useListEffect from "@/components/custom-hooks/list-effect";
+import { da } from "date-fns/locale";
+import { genCommonTableProps } from "@/lib/util";
+import { BaseType } from "@/lib/model";
 const Search = styled(Input.Search)`
   width: 30%;
   display: block;
@@ -27,7 +31,7 @@ const FlexContainer = styled.div`
   background-color: white;
 `;
 
-const confirm = (e: React.MouseEvent<HTMLElement>) => {
+const onConfirm = (e: React.MouseEvent<HTMLElement>) => {
   console.log(e);
   message.success("Click on Yes");
 };
@@ -70,17 +74,18 @@ const columns: ColumnType<Student>[] = [
   },
   {
     title: "Students Type",
-    dataIndex: "typeId",
+    dataIndex: "type",
     filters: [
       { text: "developer", value: "developer" },
       { text: "tester", value: "tester" },
     ],
-    // onFilter: (value: string, record: Student) => record.type.name === value,
-    // render: (type: BaseType) => type?.name,
+    onFilter: (value: any, record: Student | null) =>
+      record.type.name === value,
+    render: (type: BaseType) => type?.name,
   },
   {
     title: "Join Time",
-    dataIndex: "ctime",
+    dataIndex: "updatedAt",
     render: (value: string) =>
       formatDistanceToNow(new Date(value), { addSuffix: true }),
   },
@@ -93,7 +98,10 @@ const columns: ColumnType<Student>[] = [
         <Popconfirm
           title="Delete the task"
           description="Are you sure to delete this task?"
-          // onConfirm={confirm}
+          onConfirm={(e) => {
+            console.log(e);
+            message.success("Click on Yes");
+          }}
           okText="Confirm"
           cancelText="Cancel"
         >
@@ -107,9 +115,15 @@ const columns: ColumnType<Student>[] = [
 const searchQuery = {};
 
 export default function Students() {
-  const displayData = studentJson;
   const [query, setQuery] = useState<string>("");
-  // const studentsData = apiService.getStudents();
+  const [isModalDisplay, setModalDisplay] = useState(false);
+  const { data, loading, paginator, setPaginator, total, setTotal, setData } =
+    useListEffect<StudentsRequest, StudentsResponse, Student>(
+      apiService.getStudents.bind(apiService),
+      "students",
+      true,
+      { query }
+    );
 
   return (
     <div>
@@ -125,11 +139,25 @@ export default function Students() {
           <Search
             placeholder="Search by name"
             onSearch={(values) => setQuery(values)}
-            // onChange={searchQuery}
+            onClick={() => {
+              console.log("search");
+            }}
           />
         </FlexContainer>
-        <Table columns={columns} dataSource={displayData}></Table>
+        <Table
+          {...genCommonTableProps({
+            data,
+            paginator,
+            loading,
+            setPaginator,
+            columns,
+            total,
+          })}
+        ></Table>
       </Layout>
+      <div>
+        <Form></Form>
+      </div>
     </div>
   );
 }

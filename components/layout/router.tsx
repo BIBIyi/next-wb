@@ -12,7 +12,7 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 import React from "react";
-import { Role } from "../model/role";
+import { Role } from "../../lib/model/role";
 
 export interface SideNav {
   icon?: JSX.Element;

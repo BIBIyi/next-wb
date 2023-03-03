@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Menu, Input, Row } from "antd";
 import type { MenuProps } from "antd";
@@ -78,9 +78,10 @@ function getMenuItems(sideData: any, parentPath = "") {
       {
         // data.label.toLocaleLowerCase() === "overview" ||
         // data.label.toLocaleLowerCase() === "message" ?
-        parentPath === ""
-          ? (path = `/dashboard/${storage.role}/${data.path}`)
-          : (path = `/dashboard/${storage.role}/${parentPath}/${data.path}`);
+        path =
+          parentPath === ""
+            ? `/dashboard/${storage.role}/${data.path}`
+            : `/dashboard/${storage.role}/${parentPath}/${data.path}`;
       }
 
       return getItem(data.label, path, data.icon);
@@ -94,10 +95,13 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
   const [collapsed, setCollapsed] = useState(false);
   const userRole = storage.role;
   const sideData = routers.get(userRole);
-  const data = getMenuItems(sideData);
-  // const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(sideData);
-  // console.log("menuItem:", data, typeof data);
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const data = getMenuItems(sideData);
+    setData(data);
+  }, []);
   const onClick: MenuProps["onClick"] = (e) => {
     router.push(e.key);
   };
@@ -126,6 +130,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
           mode="inline"
           // defaultSelectedKeys={["1"]}
           // defaultOpenKeys={["sub1"]}
+          // items={data}
           items={data}
           onClick={onClick}
         ></Menu>
@@ -147,7 +152,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
           </Row>
         </StyledLayoutHeader>
 
-        <AppBreadcrumb></AppBreadcrumb>
+        {/* <AppBreadcrumb></AppBreadcrumb> */}
 
         <Content
           style={{

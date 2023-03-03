@@ -18,6 +18,7 @@ export interface StudentsRequest extends Paginator {
 export interface StudentsResponse extends ListResponse {
   students: Student[];
 }
+
 export interface AddStudentRequest {
   name: string;
   country: string;

@@ -1,5 +1,5 @@
-import { LoginResponse } from "@/components/model/login";
-import { Role } from "@/components/model/role";
+import { LoginResponse } from "@/lib/model/login";
+import { Role } from "@/lib/model/role";
 
 export type UserInfo = LoginResponse;
 
